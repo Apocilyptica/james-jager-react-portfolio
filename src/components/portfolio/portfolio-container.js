@@ -2,6 +2,7 @@
 // State
 // Lifecycle hooks
 import React, { Component } from "react";
+import axios from 'axios';
 
 import PortfolioItem from "./portfolio-item";
 
@@ -11,25 +12,57 @@ export default class PortfolioContainer extends Component {
 
         this.state = {
             pageTitle: "Welcome to my portfolio",
+            isLoading: false,
             data: [
-                { title: "Quip" },
-                { title: "Eventbrite" },
-                { title: "Ministry Safe" },
-                { title: "SwingAway" }
+
             ]
         };
+
+        this.handleFilter = this.handleFilter.bind(this);
+    }
+
+    handleFilter(filter) {
+        this.setState({
+            data: this.state.data.filter(item => {
+                return item.category === filter;
+            })
+        })
+    }
+    getPortfolioItems() {
+        axios.get('https://jamesjager.devcamp.space/portfolio/portfolio_items')
+            .then(response => {
+                // handle success
+                this.setState({
+                    data: response.data.portfolio_items
+                })
+            })
+            .catch(error => {
+                // handle error
+                console.log(error);
+            })
     }
 
     portfolioItems() {
-        return this.state.data.map(item => {
-            return <PortfolioItem title={item.title} url={"google.com"} />;
-        })
-    }
-    render() {
-        return (
-            <div>
-                <h2>{this.state.pageTitle}</h2>
 
+        return this.state.data.map(item => {
+            return <PortfolioItem key={item.id} item={item} />;
+        });
+    }
+
+    componentDidMount() {
+        this.getPortfolioItems();
+    }
+
+    render() {
+        if (this.state.isLoading) {
+            return <div>Loading...</div>
+        }
+
+        return (
+            <div className="portfolio-items-wrapper">
+                <button className="btn" onClick={() => this.handleFilter('eCommerce')}>eCommerce</button>
+                <button className="btn" onClick={() => this.handleFilter('Scheduling')}>Scheduling</button>
+                <button className="btn" onClick={() => this.handleFilter('Enterprise')}>Enterprise</button>
                 {this.portfolioItems()}
             </div>
         )
