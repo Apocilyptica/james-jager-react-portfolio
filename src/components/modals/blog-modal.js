@@ -15,7 +15,7 @@ export default class BlogModal extends Component {
                 left: "50%",
                 right: "auto",
                 marginRight: "-50%",
-                transform: "translate(-50%, -50%",
+                transform: "translate(-50%, -50%)",
                 width: "800px"
             },
             overlay: {
@@ -23,9 +23,7 @@ export default class BlogModal extends Component {
             }
         };
 
-        this.handleSuccessfullFormSubmission = this.handleSuccessfullFormSubmission.bind(
-            this
-        );
+        this.handleSuccessfullFormSubmission = this.handleSuccessfullFormSubmission.bind(this);
     }
 
     handleSuccessfullFormSubmission(blog) {
